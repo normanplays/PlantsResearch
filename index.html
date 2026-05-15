@@ -1,9 +1,26 @@
+The user wants me to:
+1. Remove emojis - draw actual plants using blocks, circles, lines, etc.
+2. Make the plant sprout realistically
+3. Remove the seed bag after the seed is planted
+4. Make it look better overall
+5. Add a paragraph at the bottom in 6th grade writing level (simpler language, easier to understand)
+
+I'll use SVG or canvas to draw the plant, or better yet, I can use HTML/CSS to create the plant visually with divs and styling. Let me create a nice looking plant that grows from stage to stage using shapes and colors.
+
+I should:
+- Draw a realistic plant with leaves, stems, and roots using CSS shapes
+- Make it grow through visible stages
+- Remove the seed bag after planting
+- Use proper soil, water droplets, etc.
+- Add a simple paragraph explanation at the bottom
+
+Let me create this with HTML/CSS and JavaScript.```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Growth Simulator</title>
+    <title>Plant Growth</title>
     <style>
         * {
             margin: 0;
@@ -12,8 +29,8 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,245 +40,459 @@
 
         .container {
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
             width: 100%;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #2c5f2d;
             margin-bottom: 20px;
+            font-size: 28px;
         }
 
-        .garden {
-            background: linear-gradient(to bottom, #87CEEB 0%, #90EE90 30%, #8B7355 30%, #8B7355 100%);
-            border-radius: 15px;
-            height: 350px;
-            margin: 20px 0;
+        .garden-box {
+            background: linear-gradient(to bottom, #87CEEB 0%, #90EE90 20%, #D4A574 20%, #8B6914 100%);
+            border-radius: 10px;
+            height: 400px;
             position: relative;
             overflow: hidden;
-            border: 3px solid #333;
+            border: 4px solid #654321;
+            margin: 20px 0;
         }
 
-        /* Seed Bag */
-        .seed-bag {
+        .soil {
             position: absolute;
-            top: 10px;
-            left: 30px;
-            width: 60px;
-            height: 80px;
-            background: linear-gradient(to right, #D2B48C 0%, #CD853F 100%);
-            border-radius: 5px 5px 10px 10px;
-            border: 2px solid #8B4513;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            z-index: 10;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, #A0826D 0%, #654321 100%);
         }
 
-        .seed-bag::before {
-            content: '🌱';
-            font-size: 30px;
-        }
-
-        /* Falling Seed */
-        .seed {
+        .plant-container {
             position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #8B4513;
-            border-radius: 50%;
-            left: 60px;
-            top: -20px;
-            display: none;
-            z-index: 5;
-        }
-
-        .seed.falling {
-            display: block;
-            animation: fall 2s ease-in forwards;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(280px);
-                opacity: 0;
-            }
-        }
-
-        /* Plant */
-        .plant {
-            position: absolute;
-            bottom: 60px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
+            width: 150px;
+            height: 250px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: flex-end;
-            height: 150px;
-            width: 100px;
+            align-items: center;
         }
 
-        .plant-stage {
-            font-size: 80px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        /* PLANT STAGE 1 - Just sprouting */
+        .stage-1 {
+            display: none;
         }
 
-        .plant-stage.active {
-            opacity: 1;
+        .stage-1.active {
+            display: flex;
         }
 
-        /* Water Can */
-        .water-can {
+        .sprout {
+            width: 3px;
+            height: 30px;
+            background: #228B22;
+            border-radius: 2px;
+        }
+
+        /* PLANT STAGE 2 - Two leaves */
+        .stage-2 {
+            display: none;
+        }
+
+        .stage-2.active {
+            display: flex;
+        }
+
+        .stem-small {
+            width: 4px;
+            height: 50px;
+            background: #2d5016;
+            border-radius: 2px;
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .leaf-left {
             position: absolute;
-            bottom: 40px;
-            right: 40px;
+            width: 40px;
+            height: 25px;
+            background: #3cb371;
+            border-radius: 50% 20%;
+            left: -35px;
+            top: 20px;
+            transform: rotate(-30deg);
+        }
+
+        .leaf-right {
+            position: absolute;
+            width: 40px;
+            height: 25px;
+            background: #3cb371;
+            border-radius: 20% 50%;
+            right: -35px;
+            top: 20px;
+            transform: rotate(30deg);
+        }
+
+        /* PLANT STAGE 3 - Growing bigger */
+        .stage-3 {
+            display: none;
+        }
+
+        .stage-3.active {
+            display: flex;
+        }
+
+        .stem-medium {
+            width: 5px;
+            height: 80px;
+            background: #2d5016;
+            border-radius: 2px;
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .leaf-pair {
+            position: absolute;
+            display: flex;
+            gap: 50px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .leaf {
+            width: 45px;
+            height: 30px;
+            background: #228B22;
+            border-radius: 50% 30%;
+            transform: rotate(-25deg);
+        }
+
+        .leaf.right {
+            border-radius: 30% 50%;
+            transform: rotate(25deg);
+        }
+
+        .leaf-top {
+            position: absolute;
+            top: 20px;
+        }
+
+        .leaf-mid {
+            position: absolute;
+            top: 45px;
+        }
+
+        /* PLANT STAGE 4 - Tall with more leaves */
+        .stage-4 {
+            display: none;
+        }
+
+        .stage-4.active {
+            display: flex;
+        }
+
+        .stem-tall {
+            width: 6px;
+            height: 110px;
+            background: #1a3a1a;
+            border-radius: 3px;
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .leaf-set {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .foliage {
+            width: 50px;
+            height: 35px;
+            background: #2e8b57;
+            border-radius: 50% 30%;
+            transform: rotate(-28deg);
+        }
+
+        .foliage.right {
+            border-radius: 30% 50%;
+            transform: rotate(28deg);
+        }
+
+        /* PLANT STAGE 5 - Flower bud */
+        .stage-5 {
+            display: none;
+        }
+
+        .stage-5.active {
+            display: flex;
+        }
+
+        .stem-flower {
+            width: 7px;
+            height: 120px;
+            background: #1a3a1a;
+            border-radius: 3px;
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .bud {
+            width: 25px;
+            height: 35px;
+            background: #FFD700;
+            border-radius: 50% 50% 40% 40%;
+            position: relative;
+            top: -10px;
+        }
+
+        /* PLANT STAGE 6 - Full flower */
+        .stage-6 {
+            display: none;
+        }
+
+        .stage-6.active {
+            display: flex;
+        }
+
+        .flower-petals {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #FF6B9D;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform-origin: center -20px;
+        }
+
+        .petal:nth-child(1) { transform: translateX(-50%) rotate(0deg); }
+        .petal:nth-child(2) { transform: translateX(-50%) rotate(60deg); }
+        .petal:nth-child(3) { transform: translateX(-50%) rotate(120deg); }
+        .petal:nth-child(4) { transform: translateX(-50%) rotate(180deg); }
+        .petal:nth-child(5) { transform: translateX(-50%) rotate(240deg); }
+        .petal:nth-child(6) { transform: translateX(-50%) rotate(300deg); }
+
+        .flower-center {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Water drops */
+        .water-drop {
+            position: absolute;
+            width: 10px;
+            height: 12px;
+            background: #4DB8FF;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Water can button */
+        .water-button {
+            position: absolute;
+            bottom: 120px;
+            right: 30px;
+            background: none;
+            border: none;
             font-size: 50px;
             cursor: pointer;
             transition: transform 0.2s;
             user-select: none;
         }
 
-        .water-can:hover {
-            transform: scale(1.1);
+        .water-button:hover {
+            transform: scale(1.15);
         }
 
-        .water-can:active {
-            transform: scale(0.95);
+        .water-button:active {
+            transform: scale(0.9);
         }
 
-        /* Water drops */
-        .water-drop {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #87CEEB;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #5568d3;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .day-counter {
+        .day-display {
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            color: #333;
+            color: #2c5f2d;
             margin: 15px 0;
         }
 
-        .description {
-            background: #f5f5f5;
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .paragraph {
+            background: #f0f8ff;
             padding: 20px;
-            border-radius: 10px;
-            line-height: 1.6;
-            color: #555;
-            margin-top: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
             font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .paragraph p {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌱 Plant Growth Simulator</h1>
+        <h1>Watch Your Plant Grow</h1>
 
-        <div class="garden">
-            <div class="seed-bag"></div>
-            <div class="seed"></div>
-            <div class="plant">
-                <div class="plant-stage">🌰</div>
-                <div class="plant-stage">🌱</div>
-                <div class="plant-stage">🌿</div>
-                <div class="plant-stage">🪴</div>
-                <div class="plant-stage">🌻</div>
+        <div class="garden-box">
+            <button class="water-button" id="waterBtn">💧</button>
+
+            <div class="plant-container">
+                <!-- Stage 1: Sprout -->
+                <div class="stage-1">
+                    <div class="sprout"></div>
+                </div>
+
+                <!-- Stage 2: Two leaves -->
+                <div class="stage-2">
+                    <div class="stem-small">
+                        <div class="leaf-left"></div>
+                        <div class="leaf-right"></div>
+                    </div>
+                </div>
+
+                <!-- Stage 3: Growing -->
+                <div class="stage-3">
+                    <div class="stem-medium">
+                        <div class="leaf-pair leaf-top">
+                            <div class="leaf"></div>
+                            <div class="leaf right"></div>
+                        </div>
+                        <div class="leaf-pair leaf-mid">
+                            <div class="leaf"></div>
+                            <div class="leaf right"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 4: Tall plant -->
+                <div class="stage-4">
+                    <div class="stem-tall">
+                        <div class="leaf-set" style="top: 15px;">
+                            <div class="foliage"></div>
+                            <div class="foliage right"></div>
+                        </div>
+                        <div class="leaf-set" style="top: 45px;">
+                            <div class="foliage"></div>
+                            <div class="foliage right"></div>
+                        </div>
+                        <div class="leaf-set" style="top: 75px;">
+                            <div class="foliage"></div>
+                            <div class="foliage right"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 5: Flower bud -->
+                <div class="stage-5">
+                    <div class="bud"></div>
+                    <div class="stem-flower"></div>
+                </div>
+
+                <!-- Stage 6: Full flower -->
+                <div class="stage-6">
+                    <div class="flower-petals">
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="petal"></div>
+                        <div class="flower-center"></div>
+                    </div>
+                </div>
             </div>
-            <div class="water-can">💧</div>
+
+            <div class="soil"></div>
         </div>
 
-        <div class="day-counter">
-            <span id="dayText">Day: 0</span>
+        <div class="day-display">
+            <span id="dayText">Day 0</span>
         </div>
 
         <div class="controls">
             <button id="playBtn">▶ Play</button>
-            <button id="resetBtn">🔄 Reset</button>
+            <button id="resetBtn">Reset</button>
         </div>
 
-        <div class="description">
-            <p id="description">
-                Click the play button to start the simulation. A seed will drop from the bag and begin to grow. 
-                The plant will progress through stages over several days. Click the water droplet to water the plant 
-                and help it grow faster! Watch your plant transform from a tiny seed into a beautiful flower.
-            </p>
+        <div class="paragraph">
+            <p>This is a plant growth simulator! A plant starts as a tiny seed in the ground. When you press the play button, the plant will start to grow day by day. You can see it get taller and grow more leaves. After many days, a beautiful flower will bloom at the top. If you click the water droplet, the plant will grow faster because plants need water to stay healthy and grow big and strong.</p>
         </div>
     </div>
 
     <script>
         let day = 0;
         let isPlaying = false;
-        let plantStage = -1;
-        const stageThresholds = [1, 3, 5, 8, 12];
-        const descriptions = [
-            "Waiting for the seed to be planted...",
-            "A seed has been planted! Waiting for germination...",
-            "The seed is sprouting! A tiny seedling has appeared.",
-            "The plant is growing leaves and getting stronger.",
-            "The plant is developing into a healthy plant with many leaves.",
-            "Your plant is thriving and has produced a beautiful flower!",
-            "Congratulations! Your flower is in full bloom!"
-        ];
+        let currentStage = 0;
+        const maxDays = 18;
+        let intervalId = null;
 
         const playBtn = document.getElementById('playBtn');
         const resetBtn = document.getElementById('resetBtn');
         const dayText = document.getElementById('dayText');
-        const description = document.getElementById('description');
-        const seed = document.querySelector('.seed');
-        const plantStages = document.querySelectorAll('.plant-stage');
-        const waterCan = document.querySelector('.water-can');
+        const waterBtn = document.getElementById('waterBtn');
 
-        let intervalId = null;
+        const stages = document.querySelectorAll('[class^="stage-"]');
 
         playBtn.addEventListener('click', () => {
             if (!isPlaying) {
                 isPlaying = true;
                 playBtn.textContent = '⏸ Pause';
-                if (day === 0 && plantStage === -1) {
-                    dropSeed();
-                }
                 startGrowth();
             } else {
                 isPlaying = false;
@@ -275,37 +506,27 @@
             playBtn.textContent = '▶ Play';
             clearInterval(intervalId);
             day = 0;
-            plantStage = -1;
-            dayText.textContent = 'Day: 0';
-            description.textContent = descriptions[0];
-            seed.classList.remove('falling');
-            plantStages.forEach(stage => stage.classList.remove('active'));
+            currentStage = 0;
+            dayText.textContent = 'Day 0';
+            stages.forEach(stage => stage.classList.remove('active'));
+            updateStage();
         });
 
-        waterCan.addEventListener('click', () => {
-            if (plantStage >= 0) {
+        waterBtn.addEventListener('click', () => {
+            if (currentStage > 0) {
                 createWaterDrops();
-                day = Math.min(day + 2, 15);
-                updatePlant();
+                day = Math.min(day + 3, maxDays);
+                updateStage();
             }
         });
-
-        function dropSeed() {
-            seed.classList.add('falling');
-            setTimeout(() => {
-                plantStage = 0;
-                plantStages[0].classList.add('active');
-                description.textContent = descriptions[1];
-            }, 2000);
-        }
 
         function startGrowth() {
             intervalId = setInterval(() => {
                 day++;
-                dayText.textContent = `Day: ${day}`;
-                updatePlant();
+                dayText.textContent = `Day ${day}`;
+                updateStage();
 
-                if (day >= 15) {
+                if (day >= maxDays) {
                     isPlaying = false;
                     playBtn.textContent = '▶ Play';
                     clearInterval(intervalId);
@@ -313,53 +534,25 @@
             }, 1000);
         }
 
-        function updatePlant() {
-            const oldStage = plantStage;
-            
-            for (let i = 0; i < stageThresholds.length; i++) {
-                if (day >= stageThresholds[i]) {
-                    plantStage = i;
-                }
-            }
+        function updateStage() {
+            let newStage = 0;
 
-            if (plantStage !== oldStage) {
-                if (oldStage >= 0) {
-                    plantStages[oldStage].classList.remove('active');
+            if (day >= 2) newStage = 1;
+            if (day >= 4) newStage = 2;
+            if (day >= 7) newStage = 3;
+            if (day >= 11) newStage = 4;
+            if (day >= 14) newStage = 5;
+            if (day >= 17) newStage = 6;
+
+            if (newStage !== currentStage) {
+                stages.forEach(stage => stage.classList.remove('active'));
+                const activeStage = document.querySelector('.stage-' + (newStage + 1));
+                if (activeStage) {
+                    activeStage.classList.add('active');
                 }
-                plantStages[plantStage].classList.add('active');
-                description.textContent = descriptions[plantStage + 1];
+                currentStage = newStage;
             }
         }
 
         function createWaterDrops() {
-            const can = document.querySelector('.water-can');
-            const rect = can.getBoundingClientRect();
-            
-            for (let i = 0; i < 5; i++) {
-                const drop = document.createElement('div');
-                drop.className = 'water-drop';
-                drop.style.left = rect.left + 25 + 'px';
-                drop.style.top = rect.top - 20 + 'px';
-                
-                document.querySelector('.garden').appendChild(drop);
-                
-                const plant = document.querySelector('.plant');
-                const plantRect = plant.getBoundingClientRect();
-                
-                setTimeout(() => {
-                    drop.style.transition = 'all 0.5s ease';
-                    drop.style.left = plantRect.left + 50 + 'px';
-                    drop.style.top = plantRect.top + 100 + 'px';
-                    drop.style.opacity = '0';
-                }, 50 * i);
-                
-                setTimeout(() => drop.remove(), 600);
-            }
-        }
-
-        // Initialize
-        plantStages[0].style.opacity = '0';
-        description.textContent = descriptions[0];
-    </script>
-</body>
-</html>
+            const gard
